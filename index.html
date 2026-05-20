@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MantleGuard AI</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="sidebar" aria-label="Project overview">
+        <div class="brand-block">
+          <div class="mark" aria-hidden="true">MG</div>
+          <div>
+            <p class="eyebrow">Turing Test 2026 · AI DevTools</p>
+            <h1>MantleGuard AI</h1>
+            <p class="subtitle">Mantle-native smart contract audit and gas optimization assistant</p>
+          </div>
+        </div>
+
+        <section class="metric-grid" aria-label="Current audit overview">
+          <div class="metric">
+            <span>Risk Score</span>
+            <strong id="riskScore">--</strong>
+          </div>
+          <div class="metric">
+            <span>Issues</span>
+            <strong id="issueCount">--</strong>
+          </div>
+          <div class="metric">
+            <span>Mantle Fit</span>
+            <strong id="mantleFit">--</strong>
+          </div>
+          <div class="metric">
+            <span>Gas Wins</span>
+            <strong id="gasCount">--</strong>
+          </div>
+        </section>
+
+        <section class="panel compact">
+          <h2>Prize Strategy</h2>
+          <ul class="clean-list">
+            <li><span class="dot high"></span>Ship a deployed Mantle demo for finalist eligibility</li>
+            <li><span class="dot mid"></span>Polish the workflow for Best UI/UX</li>
+            <li><span class="dot low"></span>Make the product Mantle-specific for the track prize</li>
+          </ul>
+        </section>
+
+        <section class="panel compact">
+          <h2>Judge Hook</h2>
+          <p>Not a generic scanner. It combines Mantle deployment checks, L2 gas guidance, risk reporting, and a developer-ready handoff.</p>
+        </section>
+      </aside>
+
+      <section class="workspace" aria-label="Audit workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">AI audit workbench</p>
+            <h2>Paste a Solidity contract and generate a Mantle launch-readiness report</h2>
+          </div>
+          <div class="actions">
+            <button id="loadSample" class="ghost-btn" type="button">Load Sample</button>
+            <button id="runAudit" class="primary-btn" type="button">Run Audit</button>
+          </div>
+        </header>
+
+        <section class="editor-grid">
+          <div class="panel editor-panel">
+            <div class="panel-head">
+              <h3>Contract Code</h3>
+              <span id="lineCount">0 lines</span>
+            </div>
+            <textarea id="contractInput" spellcheck="false" aria-label="Solidity contract code"></textarea>
+          </div>
+
+          <div class="panel report-panel">
+            <div class="panel-head">
+              <h3>Audit Result</h3>
+              <span id="auditStatus">Ready</span>
+            </div>
+            <div class="score-card">
+              <div class="ring" id="scoreRing" style="--score: 0">
+                <span id="scoreText">--</span>
+              </div>
+              <div>
+                <p class="label">Overall Risk Level</p>
+                <h3 id="riskLevel">Not analyzed</h3>
+                <p id="riskSummary">Load the sample or paste a contract to start the audit.</p>
+              </div>
+            </div>
+
+            <div class="tabs" role="tablist" aria-label="Report views">
+              <button class="tab active" data-tab="issues" type="button">Risks</button>
+              <button class="tab" data-tab="gas" type="button">Gas</button>
+              <button class="tab" data-tab="mantle" type="button">Mantle</button>
+              <button class="tab" data-tab="report" type="button">Report</button>
+            </div>
+
+            <div class="tab-view active" id="issues"></div>
+            <div class="tab-view" id="gas"></div>
+            <div class="tab-view" id="mantle"></div>
+            <div class="tab-view" id="report"></div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="src/app.js"></script>
+  </body>
+</html>
