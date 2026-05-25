@@ -177,7 +177,9 @@ function renderFindings(result) {
   const issues = document.querySelector("#issues");
   const gas = document.querySelector("#gas");
   const mantle = document.querySelector("#mantle");
+  const attest = document.querySelector("#attest");
   const report = document.querySelector("#report");
+  const reportText = buildReport(result);
 
   issues.innerHTML = result.findings.length
     ? result.findings.map(renderIssue).join("")
@@ -188,7 +190,9 @@ function renderFindings(result) {
     : `<div class="finding"><h4>No obvious gas wins found</h4><p>Deployment scripts, call frequency, and real transaction cost should still be reviewed.</p></div>`;
 
   mantle.innerHTML = result.mantle.map(renderMantle).join("");
-  report.innerHTML = `<pre class="report-text">${buildReport(result)}</pre>`;
+  attest.innerHTML = renderProof(result, reportText);
+  report.innerHTML = `<pre class="report-text">${reportText}</pre>`;
+  updateReportHash(reportText);
 }
 
 function renderIssue(item) {
@@ -215,6 +219,53 @@ function renderMantle(item) {
     <h4>${item.title}</h4>
     <p>${item.detail}</p>
   </article>`;
+}
+
+function renderProof(result, reportText) {
+  const previewHash = pseudoHash(reportText);
+  return `<div class="proof-grid">
+    <article class="finding low">
+      <span class="badge low">Ready</span>
+      <h4>On-chain report attestation</h4>
+      <p>MantleGuard includes a minimal registry contract that can emit the audit report hash, project name, score, submitter address, and timestamp on Mantle testnet.</p>
+      <p><strong>Contract:</strong> contracts/MantleGuardRegistry.sol</p>
+    </article>
+    <article class="finding medium">
+      <span class="badge medium">Report Hash</span>
+      <h4>Current audit fingerprint</h4>
+      <p>This hash is generated from the current report text. Use it as the input for registerReport after deploying the registry contract.</p>
+      <div class="hash-box" id="reportHash">${previewHash}</div>
+    </article>
+    <article class="finding">
+      <span class="badge">Call Data</span>
+      <h4>Registry call</h4>
+      <div class="hash-box">registerReport(reportHash, "MantleGuard AI demo", ${result.score})</div>
+    </article>
+  </div>`;
+}
+
+function pseudoHash(text) {
+  let h1 = 0x811c9dc5;
+  let h2 = 0x45d9f3b;
+  for (let i = 0; i < text.length; i += 1) {
+    h1 ^= text.charCodeAt(i);
+    h1 = Math.imul(h1, 16777619);
+    h2 ^= h1 >>> 13;
+    h2 = Math.imul(h2, 1597334677);
+  }
+  const part = (value) => (value >>> 0).toString(16).padStart(8, "0");
+  return `0x${part(h1)}${part(h2)}${part(h1 ^ h2)}${part(Math.imul(h1, h2))}`;
+}
+
+async function updateReportHash(text) {
+  if (!window.crypto?.subtle) return;
+  const bytes = new TextEncoder().encode(text);
+  const digest = await window.crypto.subtle.digest("SHA-256", bytes);
+  const hash = Array.from(new Uint8Array(digest))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+  const element = document.querySelector("#reportHash");
+  if (element) element.textContent = `0x${hash}`;
 }
 
 function buildReport(result) {

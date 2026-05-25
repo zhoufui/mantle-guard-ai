@@ -268,7 +268,7 @@ textarea {
 
 .tabs {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 8px;
   padding: 0 18px 16px;
 }
@@ -388,6 +388,24 @@ textarea {
   font-family: Consolas, "Cascadia Code", monospace;
   font-size: 13px;
   line-height: 1.6;
+}
+
+.hash-box {
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fcfb;
+  color: #20302d;
+  font-family: Consolas, "Cascadia Code", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.proof-grid {
+  display: grid;
+  gap: 12px;
 }
 
 @media (max-width: 1180px) {
